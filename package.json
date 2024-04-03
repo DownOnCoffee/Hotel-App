@@ -4,6 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
+    "start": "NODE_ENV=production node_modules/react-scripts/bin/react-scripts.js start",
     "server": "nodemon backend/server.js"
   },
   "type":"module",
