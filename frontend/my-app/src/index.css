@@ -1,0 +1,93 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap');
+
+.aurora-heading {
+    font-family: 'Dancing Script', cursive;
+    font-weight: 500;
+}
+.show-on-large {
+	display: none;
+  }
+  
+  .hide-on-large {
+	display: block;
+  }
+  
+  /* Media query for large screens */
+  @media screen and (min-width: 1350px) {
+	.show-on-large {
+	  display: block;
+	}
+	.hide-on-large {
+	  display: none;
+	}
+  }
+body {
+	background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('./images/bg6.jpg');
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: center;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+};
+img{
+    max-width: 100%;
+};
+
+
+  @media screen and (min-width: 400px) {
+
+	.xsscreen{
+		height:300px;
+	}
+	.buttonxs{
+		margin-inline: 10px;
+	}
+	.createPgscreen{
+		margin:50px;
+	}
+	.gapsmall{
+		gap:15px;
+	}
+	.xsMargin{
+		margin-top: 150px;
+
+	}
+  }
+  @media screen and (min-width: 300px) {
+
+	.xsscreen{
+		height:350px;
+	}
+	
+  }
+
+  
+thead th{
+    color:rgb(96, 93, 93);
+    font-size: 13.5px;
+    font-weight: bold;
+}
+/* dark mode looking scrollbar */
+::-webkit-scrollbar {
+	width: 8px;
+}
+
+::-webkit-scrollbar-track {
+	background: #555;
+}
+
+::-webkit-scrollbar-thumb {
+	background: #121212;
+	border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: #242424;
+}
+
