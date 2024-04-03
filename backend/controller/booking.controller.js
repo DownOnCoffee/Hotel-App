@@ -20,12 +20,15 @@ export const createBooking=async (req,res)=>{
 
         const overlappingBooking = await Booking.findOne({
             roomId: room._id,
+            status: 'active',
             $or: [
                 { startTime: { $lt: end }, endTime: { $gt: start } }, 
             ],
         });
+        console.log('overlapping checked');
 
         if (overlappingBooking) {
+           
             return res.status(400).json({ error: "The room is already booked for the specified time range." });
         }
       
@@ -45,7 +48,9 @@ export const createBooking=async (req,res)=>{
         res.status(201).json({ message: "Booking created successfully", newBooking });
     }catch(err){
         console.log(err);
-        res.status(500).json({error:err});
+        // res.status(500).json({error:err});
+        const errorMessage = err.message || "An unexpected error occurred during booking creation.";
+        res.status(500).json({ error: errorMessage });
     }
 
 };
@@ -76,6 +81,7 @@ export const editBooking=async (req,res)=>{
         const overlappingBooking = await Booking.findOne({
             _id: { $ne: bookingId }, 
             roomId: newRoom._id,
+            status: 'active',
             $or: [
                 { startTime: { $lt: end }, endTime: { $gt: start } }, 
             ],
@@ -97,22 +103,23 @@ export const editBooking=async (req,res)=>{
 
     }catch(err){
         console.log(err);
-        res.status(500).json({error:err});
+        const errorMessage = err.message || "An unexpected error occurred during editing the booking.";
+        res.status(500).json({ error: errorMessage });
     }
 };
 export const deleteBooking=async (req,res)=>{
     try{
         const { bookingId } = req.params;
-        console.log(bookingId);
+        console.log(bookingId,"booking id");
         const booking = await Booking.findById(bookingId);
         if (!booking) {
             return res.status(404).json({ error: "Booking not found." });
         }
-
+        booking.status='cancelled';
         const now = new Date();
         const startTime = new Date(booking.startTime);
 
-        const hoursUntilStartTime= (startTime - now) / 36e5; // Convert millisecs to hours
+        const hoursUntilStartTime= (startTime - now) / 36e5; // millisecs to hours
 
         let refund = 0; // Default refund is 0
 
@@ -123,8 +130,7 @@ export const deleteBooking=async (req,res)=>{
             // 50% refund
             refund = booking.price * 0.5;
         }
-        booking.status = 'cancelled';
-
+       
         await booking.save();
         res.json({
             message: "Booking cancelled successfully.",
@@ -134,25 +140,40 @@ export const deleteBooking=async (req,res)=>{
 
     }catch(err){
         console.log(err);
-        res.status(500).json({error:err});
+        const errorMessage = err.message || "An unexpected error occurred .";
+        res.status(500).json({ error: errorMessage });
     }
 
 };
 
 export const viewBookings=async (req,res)=>{
     try{
-        const { viewType } = req.query; 
+        const { roomFilter, typeFilter, startTimeFilter, endTimeFilter } = req.query;
         let query = {};
-       
-        const now = new Date();
 
-        
-        if (viewType === 'upcoming') {
-            query.startTime = { $gte: now }; 
-        } else if (viewType === 'passed') {
-            query.endTime = { $lt: now }; 
+        if (roomFilter) {
+            const room = await Room.findOne({ roomNumber: roomFilter });
+            if (room) {
+                query.roomId = room._id;
+            }
         }
-        const bookings = await Booking.find(query).populate('roomId', 'roomNumber roomType'); 
+
+        if (typeFilter) {
+           
+            const rooms = await Room.find({ roomType: typeFilter }).select('_id');
+            const roomIds = rooms.map(room => room._id);
+            query['roomId'] = { $in: roomIds };
+        }
+
+        if (startTimeFilter) {
+            query.startTime = { $gte: new Date(startTimeFilter) };
+        }
+
+        if (endTimeFilter) {
+            query.endTime = { $lte: new Date(endTimeFilter) };
+        }
+
+        const bookings = await Booking.find(query).populate('roomId', 'roomNumber roomType');
         res.json(bookings);
     }catch(err){
         console.log(err);

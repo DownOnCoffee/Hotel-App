@@ -27,6 +27,10 @@ const bookingSchema = new mongoose.Schema({
     enum: ["active", "cancelled", "completed"],
     default: "active",
   },
+  // userName:{
+  //   type:String,
+  //   required:true,
+  // }
 });
 
 const Booking = mongoose.model("Booking", bookingSchema);
