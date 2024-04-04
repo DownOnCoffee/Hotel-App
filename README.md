@@ -18,8 +18,7 @@ The frontend codebase is designed to be responsive across a wide range of device
 - **Styling**: Tailwind CSS
 - **HTTP client**: Axios
 
-## Clarification of Contribution
-I, Manya Raghuvanshi, would like to clarify that I've written the entire codebase from scratch, including the frontend and backend. I encountered technical difficulties that prevented me from pushing the frontend code from my laptop. In order to ensure the timely delivery of the project, my friend kindly assisted me by pushing the frontend code from their laptop.
+
 
 
 
