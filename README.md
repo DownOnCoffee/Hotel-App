@@ -19,6 +19,12 @@ The frontend codebase is designed to be responsive across a wide range of device
   ## Clarification of Contribution
   I, Manya Raghuvanshi, authored the entire codebase, including frontend and backend. Technical issues delayed pushing frontend code from my device.
 
+  ## Build the app
+  npm run server
+
+  ## Start the app
+  npm run start
+
 
 
 
